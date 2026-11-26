@@ -70,6 +70,13 @@ def main():
     # World-readable file for the grader (uid 65534 collects /output).
     # Only the FILE is chmodded -- never the /output directory itself.
     os.chmod(path, 0o644)
+    # Read back what was written and re-check it: the file on disk,
+    # not just the string in memory, is what the sealed gate scores.
+    with open(path, "r", encoding="utf-8", newline="") as handle:
+        written = handle.read()
+    if written != LINE:
+        raise ValueError("written entry differs from the validated line")
+    validate(written)
 
 
 if __name__ == "__main__":
